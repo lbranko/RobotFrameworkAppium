@@ -12,7 +12,7 @@ ${LOCAL_URL}     127.0.0.1:4723
 *** Keywords ***
 Launch Mobile Application
     Open Application    ${LOCAL_URL}    automationName=XCUITest    app=/Users/runner/Runner/Runner.app
-    ...    platformName=iOS    deviceName=iPhone 14
+    ...    platformName=iOS    udid=BF977AC9-F95D-4F48-A40D-ED622A729196
 
 Open Login Page
     Wait Until Page Contains Element    ${LOGIN.LOGIN}    timeout=30

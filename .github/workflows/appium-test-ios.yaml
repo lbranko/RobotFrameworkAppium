@@ -55,16 +55,16 @@ jobs:
           ls -lah ~/Runner.zip
           file ~/Runner.zip
 
-      - name: Debug - Pogledaj sadržaj preuzetog "ZIP-a"
-        run: |
-          echo "Prvih 20 linija preuzetog fajla:"
-          cat ~/Runner.zip | head -n 20
+#      - name: Debug - Pogledaj sadržaj preuzetog "ZIP-a"
+#        run: |
+#          echo "Prvih 20 linija preuzetog fajla:"
+#          cat ~/Runner.zip | head -n 20
 
-      - name: Debug - Provjeri GitHub Releases API
-        run: |
-          curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-           "https://api.github.com/repos/lbranko/RobotFrameworkAppium/releases/latest" | jq .
+#      - name: Debug - Provjeri GitHub Releases API
+#        run: |
+#          curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
+#          -H "Accept: application/vnd.github.v3+json" \
+#           "https://api.github.com/repos/lbranko/RobotFrameworkAppium/releases/latest" | jq .
 
       - name: Start iOS Simulator
         run: |
