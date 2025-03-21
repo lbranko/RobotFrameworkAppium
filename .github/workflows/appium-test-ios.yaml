@@ -56,9 +56,9 @@ jobs:
 
       - name: Debug - Provjeri GitHub Releases API
         run: |
-        curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
-        -H "Accept: application/vnd.github.v3+json" \
-         "https://api.github.com/repos/lbranko/RobotFrameworkAppium/releases/latest" | jq .
+          curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+           "https://api.github.com/repos/lbranko/RobotFrameworkAppium/releases/latest" | jq .
 
       - name: Start iOS Simulator
         run: |
