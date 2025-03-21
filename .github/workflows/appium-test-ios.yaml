@@ -72,10 +72,10 @@ jobs:
           SIMULATOR_ID=$(xcrun simctl list devices available | grep "iPhone 15" | awk -F '[()]' '{print $2}' | head -n 1)
           xcrun simctl boot "$SIMULATOR_ID"
 
-#      - name: Unzip iOS .app file
-#        run: |
-#          unzip ~/Runner.zip -d ~/Runner
-#          APP_PATH=$(find ~/Runner -type d -name "*.app" ! -path "*/__MACOSX/*" | head -n 1)
+      - name: Unzip iOS .app file
+        run: |
+          unzip ~/Runner.zip -d ~/Runner
+          APP_PATH=$(find ~/Runner -type d -name "*.app" ! -path "*/__MACOSX/*" | head -n 1)
 #          echo "APP_PATH=$APP_PATH" >> $GITHUB_ENV
 #          echo "Extracted .app path: $APP_PATH"
 
