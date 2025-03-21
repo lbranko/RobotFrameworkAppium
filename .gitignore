@@ -1,0 +1,4 @@
+## Ignore Results folder with default files after every new execution (log.html, output.xml, report.html)
+## and screenshots for failed test cases
+venv/*
+Results/*
