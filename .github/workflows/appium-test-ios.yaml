@@ -32,7 +32,21 @@ jobs:
 
       - name: Start Appium server
         run: |
-          appium 
+          appium --log-level debug > appium.log 2>&1 &
+          sleep 5
+
+      - name: Download iOS .app file from GitHub Releases
+        run: |
+          RELEASE_ID=$(curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
+                          -H "Accept: application/vnd.github.v3+json" \
+                          "https://github.com/lbranko/RobotFrameworkAppium/releases/latest" | jq -r '.assets[] | select(.name=="Runner.zip") | .id')
+
+          curl -L -o ~/Runner.zip -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
+               -H "Accept: application/octet-stream" \
+               "https://api.github.com/lbranko/RobotFrameworkAppium/releases/assets/$RELEASE_ID"
+
+          ls -lah ~/Runner.zip
+          file ~/Runner.zip
 
       - name: Start iOS Simulator
         run: |
@@ -40,9 +54,43 @@ jobs:
           SIMULATOR_ID=$(xcrun simctl list devices available | grep "iPhone 15" | awk -F '[()]' '{print $2}' | head -n 1)
           xcrun simctl boot "$SIMULATOR_ID"
 
+      - name: Unzip iOS .app file
+        run: |
+          unzip ~/Runner.zip -d ~/Runner
+          APP_PATH=$(find ~/Runner -type d -name "*.app" ! -path "*/__MACOSX/*" | head -n 1)
+          echo "APP_PATH=$APP_PATH" >> $GITHUB_ENV
+          echo "Extracted .app path: $APP_PATH"
+
+      - name: Install app manually
+        run: |
+          xcrun simctl install booted /Users/runner/Runner/Runner.app
+          xcrun simctl launch booted com.decode.rightvybe
+
+      - name: Debug - List extracted files
+        run: |
+          ls -lah ~/Runner
+          find ~/Runner -name "*.app"
+
+      - name: Debug - Check .app existence
+        run: |
+          if [ -d "$APP_PATH" ]; then
+            echo "✅ .app file exists: $APP_PATH"
+          else
+            echo "❌ .app file NOT found!"
+            exit 1
+          fi
+
+      - name: Debug - Check .app validity
+        run: |
+          file "$APP_PATH"
+          ls -lah "$APP_PATH"
+
+      - name: List available iOS Simulators
+        run: |
+          xcrun simctl list devices available
+
       - name: Run iOS tests
         run: |
-          
           robot -d Results Tests/
 
       - name: Upload iOS test results
