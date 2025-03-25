@@ -2,3 +2,4 @@
 ## and screenshots for failed test cases
 venv/*
 Results/*
+Resources/passwords.resource

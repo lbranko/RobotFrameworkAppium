@@ -1,0 +1,44 @@
+name: Run Android Tests on BrowserStack
+
+on:
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  run-android-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Android tests on BrowserStack
+        env:
+          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+        run: |
+          echo "*** Settings ***" > Resources/passwords.resource
+          echo "Documentation    Git ignored file for passwords" >> Resources/passwords.resource
+          echo "" >> Resources/passwords.resource
+          echo "*** Variables ***" >> Resources/passwords.resource
+          echo "\${BROWSERSTACKUSERNAME}    ${{ secrets.BROWSERSTACK_USERNAME }}" >> Resources/passwords.resource
+          echo "\${BROWSERSTACKACCESSKEY}    ${{ secrets.BROWSERSTACK_ACCESS_KEY }}" >> Resources/passwords.resource
+          
+          robot -d Results/Android -v platform:Android -v env:cloud -v BROWSERSTACKUSERNAME:$BROWSERSTACK_USERNAME -v BROWSERSTACKACCESSKEY:$BROWSERSTACK_ACCESS_KEY Tests/
+
+      - name: Upload Android test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-test-results
+          path: Results/Android
