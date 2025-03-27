@@ -36,24 +36,24 @@ jobs:
           appium --log-level debug > appium.log 2>&1 &
           sleep 5
 
-      - name: Download iOS .app file from GitHub Releases
-        run: |
-          ZIP_URL=$(curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
-                         -H "Accept: application/vnd.github.v3+json" \
-                         "https://api.github.com/repos/lbranko/RobotFrameworkAppium/releases/latest" | jq -r '.assets[] | select(.name=="Runner.zip") | .browser_download_url')
-
-          echo "Download URL: $ZIP_URL"
-
-          if [ -z "$ZIP_URL" ] || [ "$ZIP_URL" == "null" ]; then
-            echo "❌ Greška: Nije pronađen URL za Runner.zip!"
-            exit 1
-          fi
-
-          curl -L -o ~/Runner.zip "$ZIP_URL"
-
-          echo "Preuzet fajl:"
-          ls -lah ~/Runner.zip
-          file ~/Runner.zip
+#      - name: Download iOS .app file from GitHub Releases
+#        run: |
+#          ZIP_URL=$(curl -s -H "Authorization: token ${{ secrets.PAT_TOKEN }}" \
+#                         -H "Accept: application/vnd.github.v3+json" \
+#                         "https://api.github.com/repos/lbranko/RobotFrameworkAppium/releases/latest" | jq -r '.assets[] | select(.name=="Runner.zip") | .browser_download_url')
+#
+#          echo "Download URL: $ZIP_URL"
+#
+#          if [ -z "$ZIP_URL" ] || [ "$ZIP_URL" == "null" ]; then
+#            echo "❌ Greška: Nije pronađen URL za Runner.zip!"
+#            exit 1
+#          fi
+#
+#          curl -L -o ~/Runner.zip "$ZIP_URL"
+#
+#          echo "Preuzet fajl:"
+#          ls -lah ~/Runner.zip
+#          file ~/Runner.zip
 
 #      - name: Debug - Pogledaj sadržaj preuzetog "ZIP-a"
 #        run: |
@@ -71,37 +71,37 @@ jobs:
           sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
           SIMULATOR_ID=$(xcrun simctl list devices available | grep "iPhone 15" | awk -F '[()]' '{print $2}' | head -n 1)
           xcrun simctl boot "$SIMULATOR_ID"
-
-      - name: Unzip iOS .app file
-        run: |
-          unzip ~/Runner.zip -d ~/Runner
-          APP_PATH=$(find ~/Runner -type d -name "*.app" ! -path "*/__MACOSX/*" | head -n 1)
+#
+#      - name: Unzip iOS .app file
+#        run: |
+#          unzip ~/Runner.zip -d ~/Runner
+#          APP_PATH=$(find ~/Runner -type d -name "*.app" ! -path "*/__MACOSX/*" | head -n 1)
 #          echo "APP_PATH=$APP_PATH" >> $GITHUB_ENV
 #          echo "Extracted .app path: $APP_PATH"
 
       - name: Install app manually
         run: |
-          xcrun simctl install booted /Users/runner/Runner/Runner.app
+          xcrun simctl install booted "$GITHUB_WORKSPACE/Runner.app"
           xcrun simctl launch booted com.decode.rightvybe
 
-      - name: Debug - List extracted files
-        run: |
-          ls -lah ~/Runner
-          find ~/Runner -name "*.app"
-
-      - name: Debug - Check .app existence
-        run: |
-          if [ -d "$APP_PATH" ]; then
-            echo "✅ .app file exists: $APP_PATH"
-          else
-            echo "❌ .app file NOT found!"
-            exit 1
-          fi
-
-      - name: Debug - Check .app validity
-        run: |
-          file "$APP_PATH"
-          ls -lah "$APP_PATH"
+#      - name: Debug - List extracted files
+#        run: |
+#          ls -lah ~/Runner
+#          find ~/Runner -name "*.app"
+#
+#      - name: Debug - Check .app existence
+#        run: |
+#          if [ -d "$APP_PATH" ]; then
+#            echo "✅ .app file exists: $APP_PATH"
+#          else
+#            echo "❌ .app file NOT found!"
+#            exit 1
+#          fi
+#
+#      - name: Debug - Check .app validity
+#        run: |
+#          file "$APP_PATH"
+#          ls -lah "$APP_PATH"
 
       - name: List available iOS Simulators
         run: |
