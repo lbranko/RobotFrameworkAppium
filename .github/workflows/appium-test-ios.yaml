@@ -112,9 +112,15 @@ jobs:
 #          defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidatation -bool YES
 #          security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Xcode/Agents/SimulatorTrampoline.app/Contents/Resources/SimulatorTrampolineCert.pem
 
+      - name: Set APP path
+        run: |
+          APP_PATH="$GITHUB_WORKSPACE/Runner.app"
+          echo "APP_APP_PATH_LOCAL=$APP_PATH" >> $GITHUB_ENV
+          echo "App path set to: $APP_PATH"
+
       - name: Run iOS tests
         run: |
-          robot -d Results Tests/
+          robot -d Results -v APP:$APP_APP_PATH_LOCAL Tests/
 
       - name: Upload iOS test results
         if: always()
