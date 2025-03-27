@@ -38,15 +38,8 @@ ${BROWSERSTACK_BIOMETRIC_FAIL}      SEPARATOR=${EMPTY}
 
 *** Keywords ***
 Launch Mobile Application
-    IF    ('${ENV}' == 'cloud' and '${PLATFORM}' == 'Android')
-        Launch Mobile Application Cloud Android
-    ELSE IF    ('${ENV}' == 'cloud' and '${PLATFORM}' == 'iOS')
-        Launch Mobile Application Cloud iOS
-    ELSE IF    ('${ENV}' == 'local' and '${PLATFORM}' == 'Android')
-        Launch Mobile Application Local Android
-    ELSE IF    ('${ENV}' == 'local' and '${PLATFORM}' == 'iOS')
-        Launch Mobile Application Local iOS
-    END
+    Open Application    ${LOCAL_URL}    automationName=XCUITest    app=/home/runner/work/RobotFrameworkAppium/RobotFrameworkAppium/Runner.app
+     ...    platformName=iOS    udid=BF977AC9-F95D-4F48-A40D-ED622A729196
 
 Launch Mobile Application Cloud Android
     Open Application    ${REMOTE_URL}    app=RightVybe    name=${SUITE NAME}    browserstack.idleTimeout=360

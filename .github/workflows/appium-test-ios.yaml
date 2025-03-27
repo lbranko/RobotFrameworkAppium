@@ -107,10 +107,10 @@ jobs:
         run: |
           xcrun simctl list devices available
 
-      - name: Configure code signing (no signing)
-        run: |
-          defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidatation -bool YES
-          security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Xcode/Agents/SimulatorTrampoline.app/Contents/Resources/SimulatorTrampolineCert.pem
+#      - name: Configure code signing (no signing)
+#        run: |
+#          defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidatation -bool YES
+#          security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Xcode/Agents/SimulatorTrampoline.app/Contents/Resources/SimulatorTrampolineCert.pem
 
       - name: Run iOS tests
         run: |
